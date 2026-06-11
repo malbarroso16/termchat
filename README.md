@@ -2,6 +2,12 @@
 
 A real-time terminal chat application built as a backend portfolio project. Features a NestJS WebSocket server with Redis Pub/Sub, JWT authentication, presence tracking, rate limiting, and an Ink-based React TUI CLI client.
 
+## Screenshots
+
+| Auth Screen | Chat UI |
+|:-----------:|:-------:|
+| ![Auth Screen](docs/assets/Auth%20Screen.png) | ![TermChat UI](docs/assets/TermChat%20UI.png) |
+
 ## Architecture
 
 ```
