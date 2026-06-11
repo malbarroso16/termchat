@@ -1,0 +1,59 @@
+### Health check
+GET http://localhost:3000/health
+
+### Register new user
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@termchat.dev",
+  "username": "admin",
+  "password": "Password1!"
+}
+
+### Register second user
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "john@termchat.dev",
+  "username": "john_doe",
+  "password": "Password1!"
+}
+
+### Duplicate email — expect 409
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@termchat.dev",
+  "username": "admin2",
+  "password": "Password1!"
+}
+
+### Login success
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@termchat.dev",
+  "password": "Password1!"
+}
+
+### Wrong password — expect 401
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@termchat.dev",
+  "password": "wrongpassword"
+}
+
+### User not found — expect 401
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "nobody@termchat.dev",
+  "password": "Password1!"
+}

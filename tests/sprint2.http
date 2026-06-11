@@ -1,0 +1,57 @@
+### Login to get token (run first — copy accessToken from response)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@termchat.dev",
+  "password": "Password1!"
+}
+
+### Create #general channel
+POST http://localhost:3000/channels
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "general",
+  "description": "General discussion"
+}
+
+### Create #random channel
+POST http://localhost:3000/channels
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "random",
+  "description": "Off-topic chat"
+}
+
+### Create #engineering channel
+POST http://localhost:3000/channels
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "engineering",
+  "description": "Tech talk"
+}
+
+### List all channels
+GET http://localhost:3000/channels
+Authorization: Bearer {{token}}
+
+### Get channel by id
+GET http://localhost:3000/channels/1
+Authorization: Bearer {{token}}
+
+### Get messages for channel (empty initially)
+GET http://localhost:3000/channels/1/messages
+Authorization: Bearer {{token}}
+
+### Get messages with cursor pagination
+GET http://localhost:3000/channels/1/messages?limit=10
+Authorization: Bearer {{token}}
+
+### No auth — expect 401
+GET http://localhost:3000/channels
