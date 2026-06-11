@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: termchat_postgres
+    environment:
+      POSTGRES_USER: termchat
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: termchat
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U termchat']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: termchat_redis
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    container_name: termchat_server
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: postgresql://termchat:password@postgres:5432/termchat
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRY: ${JWT_EXPIRY:-24h}
+      PORT: 3000
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:3000/health || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    command: >
+      sh -c "./wait-for-it.sh postgres:5432 --timeout=30 --
+             ./wait-for-it.sh redis:6379 --timeout=30 --
+             npx prisma migrate deploy &&
+             node dist/main"
+
+volumes:
+  postgres_data:
