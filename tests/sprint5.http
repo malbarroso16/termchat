@@ -1,0 +1,92 @@
+### Sprint 5 — multi-user setup
+
+### 1. Register admin (skip if already done in sprint1.http)
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@termchat.dev",
+  "username": "admin",
+  "password": "Password1!"
+}
+
+### 2. Register second user
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "alice@termchat.dev",
+  "username": "alice",
+  "password": "Password1!"
+}
+
+### 3. Register third user
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "bob@termchat.dev",
+  "username": "bob",
+  "password": "Password1!"
+}
+
+### 4. Login as admin — copy accessToken
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@termchat.dev",
+  "password": "Password1!"
+}
+
+### 5. Create #general (admin token)
+POST http://localhost:3000/channels
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "general",
+  "description": "General discussion"
+}
+
+### 6. Create #random (admin token)
+POST http://localhost:3000/channels
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "random",
+  "description": "Off-topic"
+}
+
+### 7. Create #engineering (admin token)
+POST http://localhost:3000/channels
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "engineering",
+  "description": "Tech talk"
+}
+
+### 8. Login as alice — copy accessToken for CLI session 2
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@termchat.dev",
+  "password": "Password1!"
+}
+
+### 9. Login as bob — copy accessToken for CLI session 3
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "bob@termchat.dev",
+  "password": "Password1!"
+}
+
+### 10. List channels (verify all three exist)
+GET http://localhost:3000/channels
+Authorization: Bearer {{adminToken}}
